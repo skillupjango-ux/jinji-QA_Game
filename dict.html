@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>辞典</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="screen-head">
+  <h1>辞典</h1>
+</header>
+
+<main>
+
+  <ul class="genre-tabs">
+    <li><button type="button">労働</button></li>
+    <li><button type="button">研修</button></li>
+    <li><button type="button">採用</button></li>
+  </ul>
+
+  <p class="filter"><button type="button" class="filter-univ">大学に関係あり だけ見る</button></p>
+
+  <p class="list-count" id="件数"></p>
+
+  <ul class="topic-list" id="話題一覧"></ul>
+
+</main>
+
+<p class="disclaimer">要約と問題はAIが作成しています。実務での判断は、必ず出典のページで確かめてください。</p>
+
+<nav class="tabs">
+  <a href="index.html">今日</a>
+  <a href="quiz.html">問題</a>
+  <span class="tab-current">辞典</span>
+</nav>
+
+<script src="data.js"></script>
+<script src="dict.js"></script>
+
+</body>
+</html>

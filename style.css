@@ -1,0 +1,724 @@
+/* 見た目の方向性
+   地は薄いグレー、要素は白いカードで浮かせる。色は紺を軸に1系統だけ。
+   「毎朝ひらきたくなる」程度の華やかさにとどめ、色数は増やさない。 */
+
+:root {
+  --accent: #1c3f6e;        /* アクセントの紺 */
+  --accent-bright: #2d6ca8; /* 紺のグラデーションの明るい側 */
+  --accent-tint: #eaf0f7;   /* 紺のごく薄い面 */
+  --ink: #15202b;           /* 本文の文字 */
+  --ink-quiet: #5a646e;     /* 控えめな文字（出典・日付など） */
+  --ok: #1c6b45;            /* 正解の緑 */
+  --ok-tint: #e7f4ec;
+  --ng: #a3302c;            /* 不正解とエラーの赤 */
+  --ng-tint: #fdecec;
+  --page: #f1f4f8;          /* 画面の地 */
+  --line-control: #c3cad3;  /* ボタン・選択肢の枠 */
+  --line-box: #e2e7ee;      /* カードの枠 */
+  --line-split: #e8ecf1;    /* 一覧の区切り線 */
+  --shadow: 0 1px 2px rgba(16, 32, 48, .06), 0 10px 24px rgba(16, 32, 48, .06);
+  --shadow-lift: 0 2px 4px rgba(16, 32, 48, .08), 0 14px 32px rgba(16, 32, 48, .10);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 見出しや選択肢は、行末に1〜2文字だけ残らないよう、
+   2行になるときは上下で均等に分ける */
+.screen-head h1,
+.card h2,
+.block h2,
+.question,
+.choices button,
+.topic-row a,
+.source,
+.row-meta {
+  text-wrap: balance;
+}
+
+body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 28px 20px 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: "Segoe UI", "Yu Gothic UI", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* 画面の上部：紺の帯にして、いまどの画面にいるかを一目で分かるようにする */
+
+.screen-head {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+  border-radius: 16px;
+  padding: 24px 26px 26px;
+  margin-bottom: 28px;
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.screen-head h1 {
+  margin: 2px 0;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: .02em;
+}
+
+.screen-head .screen-meta {
+  color: rgba(255, 255, 255, .88);
+}
+
+.screen-meta {
+  margin: 6px 0;
+  font-size: 15px;
+  color: var(--ink-quiet);
+}
+
+.back {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.screen-head .back a {
+  color: rgba(255, 255, 255, .92);
+}
+
+/* 今日の画面：トピックカード */
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line-box);
+  border-radius: 14px;
+  padding: 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.summary {
+  margin: 0 0 20px;
+  line-height: 1.95;
+}
+
+.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+/* ジャンルの印：薄い面と文字だけ。主役はあくまで見出し */
+.tags li {
+  background: var(--accent-tint);
+  border-radius: 999px;
+  padding: 3px 15px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.8;
+  color: var(--accent);
+}
+
+/* 「大学に関係あり」の印だけ塗りつぶして目立たせる */
+.tags li.univ {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* 文章の中に出てくる「大学に関係あり」の印 */
+.univ-mark {
+  color: var(--accent);
+  font-weight: 700;
+  white-space: nowrap; /* 印の途中で改行させない */
+}
+
+/* 紺の帯の中では、同じ紺だと読めないので白い札にする */
+.screen-head .univ-mark {
+  background: rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  padding: 1px 12px;
+  color: #fff;
+}
+
+.source {
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: var(--ink-quiet);
+}
+
+/* 主でないボタン・リンクは枠だけ */
+.card-action {
+  margin: 14px 0 0;
+}
+
+.card-action a,
+.card-action button {
+  display: inline-block;
+  border: 1px solid var(--line-control);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--accent);
+  padding: 9px 20px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.card-action a:hover,
+.card-action button:hover {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+/* いちばん押してほしいボタンだけ紺で塗る */
+.next-action {
+  margin: 28px 0 8px;
+  text-align: center;
+}
+
+.next-action a {
+  display: block;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+  border-radius: 12px;
+  color: #fff;
+  padding: 17px;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: box-shadow .15s, transform .15s;
+}
+
+.next-action a:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-1px);
+}
+
+/* 問題の画面 */
+
+.state-label {
+  color: var(--ink-quiet);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin: 32px 0 12px;
+}
+
+.block {
+  background: #fff;
+  border: 1px solid var(--line-box);
+  border-radius: 14px;
+  padding: 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.block h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* レベルのバー：進んだ分を塗る。紺の帯の中では白で塗る */
+.bar {
+  background: rgba(255, 255, 255, .28);
+  border-radius: 999px;
+  height: 10px;
+  margin: 14px 0 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: #fff;
+  width: 0;  /* 実際の長さは記録の数字から決まるので、JavaScriptが指定する */
+  height: 100%;
+  border-radius: 999px;
+}
+
+.block .bar {
+  background: var(--accent-tint);
+}
+
+.block .bar-fill {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-bright) 100%);
+}
+
+.progress {
+  margin: 0 0 18px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--accent);
+}
+
+/* 前に間違えた問題に付ける小さな印 */
+.retry-mark {
+  display: inline-block;
+  background: var(--ng-tint);
+  border-radius: 999px;
+  color: var(--ng);
+  margin: 0 0 12px;
+  padding: 1px 14px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.question {
+  margin: 0 0 22px;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.9;
+}
+
+/* 4択：4つとも完全に同じ見た目。A〜Dの印はCSSで自動で振る */
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: choice;
+}
+
+.choices li {
+  counter-increment: choice;
+  margin-bottom: 12px;
+}
+
+.choices button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  border: 1px solid var(--line-control);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  padding: 14px 18px;
+  text-align: left;
+  font: inherit;
+  line-height: 1.7;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+
+.choices button::before {
+  content: counter(choice, upper-alpha);
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: center;
+}
+
+.choices button:hover {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+/* JavaScriptが画面を出し入れするのに使う */
+.hidden {
+  display: none;
+}
+
+/* 答えた後の選択肢：正解と、自分が選んだ答えに色を付ける */
+.choices button:disabled {
+  cursor: default;
+}
+
+.choices button:disabled:hover {
+  background: #fff;
+  border-color: var(--line-control);
+}
+
+.choices button.correct,
+.choices button.correct:hover {
+  background: var(--ok-tint);
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+.choices button.correct::before {
+  background: var(--ok);
+  color: #fff;
+}
+
+.choices button.wrong,
+.choices button.wrong:hover {
+  background: var(--ng-tint);
+  border-color: var(--ng);
+  color: var(--ng);
+}
+
+.choices button.wrong::before {
+  background: var(--ng);
+  color: #fff;
+}
+
+/* 正誤は、文字の色だけでなく小さな札で示す */
+.judge {
+  display: inline-block;
+  background: var(--ok-tint);
+  border-radius: 999px;
+  color: var(--ok);
+  padding: 2px 18px;
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.judge.wrong {
+  background: var(--ng-tint);
+  color: var(--ng);
+}
+
+/* 間違えたときに出す「正解は〜です」の1行 */
+.correct-answer {
+  margin: 0 0 12px;
+  font-weight: 700;
+}
+
+.explain {
+  margin: 0 0 16px;
+  line-height: 1.95;
+}
+
+.result-score {
+  background: var(--accent-tint);
+  border-radius: 12px;
+  color: var(--accent);
+  margin: 0 0 14px;
+  padding: 14px;
+  font-size: 23px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.levels {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.levels li {
+  border-bottom: 1px solid var(--line-split);
+  padding: 10px 0;
+}
+
+.hint {
+  background: var(--accent-tint);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  margin: 0 0 14px;
+  padding: 10px 16px;
+  font-weight: 700;
+}
+
+/* 辞典の画面 */
+
+.genre-tabs {
+  list-style: none;
+  display: flex;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid var(--line-box);
+  border-radius: 12px;
+  margin: 0 0 12px;
+  padding: 5px;
+  box-shadow: var(--shadow);
+}
+
+.genre-tabs li {
+  flex: 1;
+}
+
+.genre-tabs button {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  padding: 11px 4px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.genre-tabs button:hover {
+  background: var(--accent-tint);
+}
+
+/* 選んでいるジャンルは紺で塗る。もう一度押すと解除される */
+.genre-tabs button.selected,
+.genre-tabs button.selected:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ジャンルとは軸が違うので、タブではなく絞り込みとして置く */
+.filter {
+  margin: 0 0 16px;
+}
+
+.filter-univ {
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--accent);
+  padding: 7px 18px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.filter-univ:hover {
+  background: var(--accent-tint);
+}
+
+/* 絞り込みが効いているあいだは塗りつぶす */
+.filter-univ.selected,
+.filter-univ.selected:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* いま何で絞り込んでいて、何件あるか */
+.list-count {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  color: var(--ink-quiet);
+}
+
+/* 絞り込んだ結果が0件のとき */
+.empty {
+  background: #fff;
+  border: 1px dashed var(--line-control);
+  border-radius: 12px;
+  padding: 24px 20px;
+  color: var(--ink-quiet);
+  text-align: center;
+}
+
+.topic-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 一覧：1行ずつ白いカードにして、押せる場所をはっきりさせる */
+.topic-row {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--line-box);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  padding: 16px 40px 16px 20px;
+  box-shadow: var(--shadow);
+  transition: box-shadow .15s, transform .15s;
+}
+
+.topic-row:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-1px);
+}
+
+/* 右端の「›」は押せる印。CSSで足しているので文章には入らない */
+.topic-row::after {
+  content: "\203A";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  margin-top: -16px;
+  color: var(--line-control);
+  font-size: 24px;
+}
+
+.topic-row a {
+  display: block;
+  font-weight: 700;
+  line-height: 1.7;
+  text-decoration: none;
+}
+
+.topic-row a:hover {
+  text-decoration: underline;
+}
+
+/* 最終更新日と収録件数は、話題名と同じ行には置かない。
+   同じ行に詰めると、長い話題名が1〜2文字ずつ折り返されてしまうため */
+.row-meta {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--ink-quiet);
+}
+
+/* まとめの画面：経緯は縦の線でつないで、流れが分かるようにする */
+
+.history {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 0 28px;
+}
+
+.history::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 14px;
+  bottom: 20px;
+  width: 2px;
+  background: var(--line-split);
+}
+
+.history li {
+  position: relative;
+  padding: 0 0 22px;
+}
+
+.history li::before {
+  content: "";
+  position: absolute;
+  left: -27px;
+  top: 9px;
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--accent);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.history p {
+  margin: 0 0 6px;
+}
+
+.history-date {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  color: var(--accent);
+}
+
+/* データが読めなかったときの知らせ */
+
+.error {
+  background: var(--ng-tint);
+  border-left: 4px solid var(--ng);
+  border-radius: 0 8px 8px 0;
+  color: var(--ng);
+  margin: 0 0 12px;
+  padding: 12px 16px;
+}
+
+/* AIが書いたものだという断り書き */
+
+.disclaimer {
+  margin: 32px 0 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-quiet);
+  text-align: center;
+}
+
+/* 下部タブ：画面の下に貼り付けて、いつでも行き来できるようにする */
+
+.tabs {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid var(--line-box);
+  border-bottom: 0;
+  border-radius: 14px 14px 0 0;
+  margin-top: 16px;
+  padding: 6px 6px 10px;
+  box-shadow: 0 -6px 20px rgba(16, 32, 48, .07);
+}
+
+.tabs a,
+.tabs .tab-current {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 10px;
+  padding: 12px 4px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.tabs a {
+  color: var(--ink-quiet);
+}
+
+.tabs a:hover {
+  background: var(--accent-tint);
+  color: var(--accent);
+}
+
+.tab-current {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* 窓が狭いとき：余白を詰めて、ボタンが画面からはみ出さないようにする */
+
+@media (max-width: 560px) {
+  body {
+    padding: 16px 12px 0;
+  }
+
+  .screen-head,
+  .card,
+  .block {
+    padding: 20px 18px;
+  }
+
+  .screen-head h1 {
+    font-size: 23px;
+  }
+
+  .topic-row {
+    padding: 14px 34px 14px 16px;
+  }
+
+  /* 選択肢は横幅をなるべく文章に回す */
+  .choices button {
+    gap: 10px;
+    padding: 13px 14px;
+  }
+
+  .choices button::before {
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
+  }
+}
