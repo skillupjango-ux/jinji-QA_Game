@@ -42,7 +42,7 @@ async function 画面を作る() {
 
 // 画面の上の紺の帯（話題名と、ジャンルなどの情報）
 function 見出しを作る(まとめ) {
-  document.title = まとめ.話題名;
+  document.title = まとめ.話題名 + "｜" + アプリ名;
   document.getElementById("話題名").textContent = まとめ.話題名;
 
   const 情報 = document.getElementById("見出しの情報");

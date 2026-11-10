@@ -1,6 +1,10 @@
 // どの画面からも使う、小さな道具をまとめたファイル。
 // 画面ごとの処理は index.js / quiz.js / dict.js / topic.js に分けてある。
 
+// アプリの名前と、ひとこと。名前を変えたいときは、ここを直すだけで全部の画面に効く。
+const アプリ名 = "人事の朝刊";
+const アプリのひとこと = "読んで5分、解いて3問";
+
 // 学習記録をどこに置くか。
 //   "ファイル" … 自分のPCで動かすとき。data/users/自分.json に保存する（サーバーが書き込む）
 //   "ブラウザ" … 公開したとき。見ている人のブラウザの中に保存する（人ごとに別々になる）
@@ -124,6 +128,67 @@ function 日付を読みやすく(日付) {
   const 部分 = 日付.split("-");
   return Number(部分[0]) + "年" + Number(部分[1]) + "月" + Number(部分[2]) + "日";
 }
+
+// --- どの画面にも出す飾り（看板と、下のタブの絵） ---------------------------
+
+// 絵（アイコン）の形。色や線の太さは style.css で決める。
+const 看板の絵 =
+  '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+  '<path class="sun" d="M5 17a7 7 0 0 1 14 0z"/>' +
+  '<path class="ray" d="M3 20h18M12 4v3M4.6 8.6l2 2M19.4 8.6l-2 2"/></svg>';
+
+const タブの絵 = {
+  "今日": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/>' +
+          '<path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg>',
+  "問題": '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/>' +
+          '<path d="M8 12.5l2.8 2.8L16 9.5"/></svg>',
+  "辞典": '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/>' +
+          '<path d="M5 17a3 3 0 0 1 3-3h10"/></svg>'
+};
+
+// ブラウザのタブに出る小さな絵。画像ファイルを置かずに、ここで形を書いている。
+const タブに出る絵 = "data:image/svg+xml," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+  '<rect width="24" height="24" rx="6" fill="#1c3f6e"/>' +
+  '<path d="M6 16.5a6 6 0 0 1 12 0z" fill="#f6b04a"/>' +
+  '<path d="M4.5 19h15M12 5v2.5M6 9l1.6 1.6M18 9l-1.6 1.6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>');
+
+function 飾りを付ける() {
+  // 1. 画面のいちばん上に、アプリ名の看板を出す
+  const 看板 = 要素("div", "brand");
+  const リンク = 要素("a", "brand-link");
+  リンク.href = "index.html";
+  const 絵 = 要素("span", "brand-mark");
+  絵.innerHTML = 看板の絵;
+  const 文字 = 要素("span", "brand-text");
+  文字.appendChild(要素("span", "brand-name", アプリ名));
+  文字.appendChild(要素("span", "brand-tagline", アプリのひとこと));
+  リンク.appendChild(絵);
+  リンク.appendChild(文字);
+  看板.appendChild(リンク);
+  document.body.prepend(看板);
+
+  // 2. ブラウザのタブの名前と絵
+  document.title = document.title + "｜" + アプリ名;
+  const 絵の指定 = document.createElement("link");
+  絵の指定.rel = "icon";
+  絵の指定.href = タブに出る絵;
+  document.head.appendChild(絵の指定);
+
+  // 3. 下のタブに絵を付ける
+  document.querySelectorAll(".tabs a, .tabs .tab-current").forEach(function (タブ) {
+    const 名前 = タブ.textContent.trim();
+    if (タブの絵[名前]) {
+      タブ.textContent = "";
+      const 絵の場所 = 要素("span", "tab-icon");
+      絵の場所.innerHTML = タブの絵[名前];
+      タブ.appendChild(絵の場所);
+      タブ.appendChild(要素("span", "tab-label", 名前));
+    }
+  });
+}
+
+飾りを付ける();
 
 // 読み込みに失敗したとき、何が起きたかを画面に出す。
 function 失敗を伝える(場所, エラー) {

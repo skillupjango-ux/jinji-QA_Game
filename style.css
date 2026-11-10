@@ -1,8 +1,12 @@
 /* 見た目の方向性
-   地は薄いグレー、要素は白いカードで浮かせる。色は紺を軸に1系統だけ。
-   「毎朝ひらきたくなる」程度の華やかさにとどめ、色数は増やさない。 */
+   地は薄いグレー、要素は白いカードで浮かせる。色は紺が軸。
+   そこに「朝日」の暖色を1色だけ足して、朝ひらくアプリらしさを出す。
+   暖色を使うのは、看板の絵・連続日数・頭の部分の光だけ。あちこちに塗らない。 */
 
 :root {
+  --sun: #f6b04a;           /* 朝日の色。使う場所をしぼる */
+  --sun-tint: #fdf1e0;      /* 朝日のごく薄い面 */
+  --sun-ink: #8a5200;       /* 朝日の面にのせる文字 */
   --accent: #1c3f6e;        /* アクセントの紺 */
   --accent-bright: #2d6ca8; /* 紺のグラデーションの明るい側 */
   --accent-tint: #eaf0f7;   /* 紺のごく薄い面 */
@@ -37,10 +41,20 @@
   text-wrap: balance;
 }
 
+/* 見出しや問題文は、言葉の途中（「登／録制」のような所）で折り返さないようにする。
+   対応していないブラウザでは、ふつうの折り返しになる */
+.screen-head h1,
+.card h2,
+.question,
+.choices button,
+.topic-row a {
+  word-break: auto-phrase;
+}
+
 body {
   max-width: 720px;
   margin: 0 auto;
-  padding: 28px 20px 0;
+  padding: 18px 20px 0;
   background: var(--page);
   color: var(--ink);
   font-family: "Segoe UI", "Yu Gothic UI", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
@@ -52,15 +66,123 @@ a {
   color: var(--accent);
 }
 
-/* 画面の上部：紺の帯にして、いまどの画面にいるかを一目で分かるようにする */
+/* 看板：どの画面でも、いちばん上にアプリの名前を出す */
+
+.brand {
+  margin: 0 0 14px;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand-mark {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+  box-shadow: var(--shadow);
+}
+
+.brand-mark svg {
+  width: 26px;
+  height: 26px;
+}
+
+.brand-mark .sun {
+  fill: var(--sun);
+}
+
+.brand-mark .ray {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.brand-name {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+.brand-tagline {
+  font-size: 12px;
+  letter-spacing: .08em;
+  color: var(--ink-quiet);
+}
+
+/* 画面の上部：紺の帯。右上に朝日の光をうっすら入れる */
 
 .screen-head {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
+  background:
+    radial-gradient(90% 150% at 100% 0%, rgba(246, 176, 74, .42) 0%, rgba(246, 176, 74, 0) 48%),
+    linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
   border-radius: 16px;
   padding: 24px 26px 26px;
   margin-bottom: 28px;
   color: #fff;
   box-shadow: var(--shadow);
+}
+
+/* 「今日」の画面の頭：あいさつ、日付、きょうの数字 */
+
+.hero-greeting {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: .08em;
+  color: rgba(255, 255, 255, .88);
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-size: 32px;
+  letter-spacing: .03em;
+}
+
+.stats {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.stat {
+  background: rgba(255, 255, 255, .16);
+  border-radius: 999px;
+  padding: 3px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.8;
+  white-space: nowrap;
+}
+
+/* 連続日数だけ朝日の色にして、続けている手応えを目立たせる */
+.stat.streak {
+  background: var(--sun);
+  color: var(--accent);
+}
+
+.hero-note {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, .88);
 }
 
 .screen-head h1 {
@@ -108,6 +230,34 @@ a {
   line-height: 1.6;
 }
 
+/* トピックに 1・2・3 の番号を振る（数字はCSSが自動で数える） */
+#トピック一覧 {
+  counter-reset: topic;
+}
+
+#トピック一覧 .card {
+  counter-increment: topic;
+  position: relative;
+  padding-top: 30px;
+}
+
+#トピック一覧 .card::before {
+  content: counter(topic);
+  position: absolute;
+  top: -12px;
+  left: 22px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 30px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
 .summary {
   margin: 0 0 20px;
   line-height: 1.95;
@@ -131,6 +281,17 @@ a {
   font-weight: 700;
   line-height: 1.8;
   color: var(--accent);
+}
+
+/* ジャンルごとに、ごく薄い色を変える（一覧をぱっと見て分野が分かるように） */
+.tags li.g-training {
+  background: var(--ok-tint);
+  color: var(--ok);
+}
+
+.tags li.g-hiring {
+  background: var(--sun-tint);
+  color: var(--sun-ink);
 }
 
 /* 「大学に関係あり」の印だけ塗りつぶして目立たせる */
@@ -668,11 +829,29 @@ a {
 .tabs .tab-current {
   flex: 1 1 0;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   border-radius: 10px;
   padding: 12px 4px;
   font-weight: 700;
-  text-align: center;
   text-decoration: none;
+}
+
+/* タブの絵：線だけで描き、色は文字と同じにする */
+.tab-icon {
+  display: flex;
+}
+
+.tab-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .tabs a {
@@ -704,6 +883,10 @@ a {
 
   .screen-head h1 {
     font-size: 23px;
+  }
+
+  .hero h1 {
+    font-size: 27px;
   }
 
   .topic-row {
