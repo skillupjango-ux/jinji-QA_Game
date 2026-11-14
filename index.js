@@ -38,7 +38,9 @@ function 頭の部分を作る(その日, 記録) {
 
   const 数字の列 = document.getElementById("きょうの数字");
   数字の列.textContent = "";
-  数字の列.appendChild(要素("li", "stat streak", 記録.連続日数 + "日連続"));
+  // はじめての人に「0日連続」と出すのはさびしいので、言い方を変える
+  数字の列.appendChild(要素("li", "stat streak",
+    記録.連続日数 > 0 ? 記録.連続日数 + "日連続" : "今日からスタート"));
   数字の列.appendChild(要素("li", "stat", "レベル " + 記録.レベル));
   数字の列.appendChild(要素("li", "stat",
     "トピック" + その日.トピック.length + "件・問題" + その日.問題.length + "問"));

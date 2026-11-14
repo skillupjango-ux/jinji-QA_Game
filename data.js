@@ -52,6 +52,65 @@ function まとめ一覧を読む() {
   return データを読む("data/summaries.json");
 }
 
+// ある話題の問題を、これまでの日の分から集める。
+// その話題が出た日は「経緯」に書いてあるので、その日のファイルだけを読む。
+async function 話題の問題を集める(まとめ) {
+  const 日付たち = Array.from(new Set(まとめ.経緯.map(function (出来事) {
+    return 出来事.日付;
+  })));
+
+  const 集めた問題 = [];
+  for (const 日付 of 日付たち) {
+    let その日 = null;
+    try {
+      その日 = await データを読む("data/topics/" + 日付 + ".json");
+    } catch (エラー) {
+      continue;   // その日のファイルが無いときは飛ばす
+    }
+    その日.問題.forEach(function (問題) {
+      if (問題.まとめid === まとめ.id) {
+        問題.出た日 = 日付;
+        集めた問題.push(問題);
+      }
+    });
+  }
+  return 集めた問題;
+}
+
+// 過去の問題から、まだ出していないものを1問えらぶ。もう無ければ null。
+// 内容のある日は、まとめの「経緯」に出てくる日付から分かる。
+async function 過去の問題を1つ選ぶ(もう出した問題文) {
+  const まとめ一覧 = await まとめ一覧を読む();
+  const 日付の集まり = new Set();
+  まとめ一覧.forEach(function (まとめ) {
+    まとめ.経緯.forEach(function (出来事) {
+      日付の集まり.add(出来事.日付);
+    });
+  });
+
+  // 日付をでたらめな順に並べて、出せる問題がある日が見つかるまで順に見る
+  const 日付たち = Array.from(日付の集まり).sort(function () {
+    return Math.random() - 0.5;
+  });
+  for (const 日付 of 日付たち) {
+    let その日 = null;
+    try {
+      その日 = await データを読む("data/topics/" + 日付 + ".json");
+    } catch (エラー) {
+      continue;
+    }
+    const 出せる問題 = その日.問題.filter(function (問題) {
+      return !もう出した問題文.includes(問題.問題文);
+    });
+    if (出せる問題.length > 0) {
+      const 問題 = 出せる問題[Math.floor(Math.random() * 出せる問題.length)];
+      問題.出た日 = 日付;
+      return 問題;
+    }
+  }
+  return null;
+}
+
 // 学習記録（人ごと）を読む。
 async function 学習記録を読む() {
   if (記録の置き場 === "ファイル") {
@@ -106,6 +165,9 @@ function 出典の行(出典) {
   行.appendChild(document.createTextNode("出典："));
   const リンク = 要素("a", null, 出典.名前);
   リンク.href = 出典.url;
+  // 出典は外のサイトなので、新しいタブで開く（アプリの画面を残しておくため）
+  リンク.target = "_blank";
+  リンク.rel = "noopener";
   行.appendChild(リンク);
   行.appendChild(document.createTextNode("（" + 出典.種類 + "）"));
   return 行;

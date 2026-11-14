@@ -34,7 +34,12 @@ async function 画面を作る() {
     まとめの場所.textContent = "";
     まとめの場所.appendChild(今どうなっているか(まとめ));
     まとめの場所.appendChild(これまでの経緯(まとめ));
-    まとめの場所.appendChild(問題へのボタン());
+
+    // この話題の問題があるときだけ、解くためのボタンを出す
+    const 問題たち = await 話題の問題を集める(まとめ);
+    if (問題たち.length > 0) {
+      まとめの場所.appendChild(問題へのボタン(まとめ, 問題たち.length));
+    }
   } catch (エラー) {
     失敗を伝える(まとめの場所, エラー);
   }
@@ -92,10 +97,11 @@ function これまでの経緯(まとめ) {
   return 囲み;
 }
 
-function 問題へのボタン() {
+function 問題へのボタン(まとめ, 問題の数) {
   const 行 = 要素("p", "next-action");
-  const リンク = 要素("a", null, "この話題の問題を解く");
-  リンク.href = "quiz.html";
+  const リンク = 要素("a", null, "この話題の問題を解く（" + 問題の数 + "問）");
+  // 住所の末尾に話題のidを付けて、問題の画面に「この話題の問題だけ出して」と伝える
+  リンク.href = "quiz.html?topic=" + encodeURIComponent(まとめ.id);
   行.appendChild(リンク);
   return 行;
 }

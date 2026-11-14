@@ -212,6 +212,11 @@ a {
   color: rgba(255, 255, 255, .92);
 }
 
+/* 「戻る」の前に矢印を付けて、押せることを分かりやすくする */
+.back a::before {
+  content: "\2039\00a0";
+}
+
 /* 今日の画面：トピックカード */
 
 .card {
@@ -346,6 +351,48 @@ a {
 .card-action button:hover {
   border-color: var(--accent);
   background: var(--accent-tint);
+}
+
+/* ボタンを横に並べる入れ物。先頭に「次に押してほしいボタン」を置く */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.actions .card-action {
+  margin: 0;
+}
+
+/* 次に押してほしいボタン（主役）は紺で塗る */
+.card-action.primary a,
+.card-action.primary button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.card-action.primary a:hover,
+.card-action.primary button:hover {
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+}
+
+.card-action button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+/* 「復習です」「おまけの1問です」などの、出題についての知らせ */
+.mode-note {
+  background: var(--sun-tint);
+  border-left: 4px solid var(--sun);
+  border-radius: 0 8px 8px 0;
+  color: var(--sun-ink);
+  margin: 0 0 16px;
+  padding: 10px 16px;
+  font-size: 15px;
 }
 
 /* いちばん押してほしいボタンだけ紺で塗る */
